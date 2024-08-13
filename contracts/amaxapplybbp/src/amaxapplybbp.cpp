@@ -167,7 +167,7 @@ using namespace mdao;
 
       auto plan_itr = _plan_t.find(bbp_itr->plan_id);
       CHECKC( plan_itr != _plan_t.end(), err::RECORD_NOT_FOUND, "plan not found symbol" )
-      CHECKC( plan_itr->finish_bbp_quota <= plan_itr->total_bbp_quota, err::STATUS_ERROR, "this plan already finished")
+      CHECKC( plan_itr->finish_bbp_quota < plan_itr->total_bbp_quota, err::STATUS_ERROR, "this plan already finished")
       amax_quant = plan_itr->quants.at(extended_symbol(AMAX_SYMBOL, AMAX_BANK));
 
       auto quants = bbp_itr->quants;
