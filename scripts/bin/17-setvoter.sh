@@ -2,7 +2,7 @@
 voter_array=()
 while read line; do
     voter_array+=("$line")
-done < ./17-applybbp-voter.txt
+done < ./18-obbp-voter-list.txt
 
 mcli='amcli -u https://expnode.amaxscan.io'
 # mcli="amcli -u http://sh-amnod.vmi.amax.dev:18188" 
