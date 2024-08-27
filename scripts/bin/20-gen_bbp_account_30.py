@@ -13,8 +13,8 @@ def gen_votes():
     i=0
     voters=""
     accounts=[]
-    for i1 in range(0,1):
-        for i2 in range(0,3):
+    for i1 in range(0,2):
+        for i2 in range(0,10):
             for i3 in range(0,10):
                 for i4 in range(0,10):
                         acc=list[i1]+list[i2]+list[i3]+list[i4] +"v.bbp"
@@ -25,4 +25,17 @@ def gen_votes():
                             print(voters + "\n")
                             voters=""
                             
-gen_votes()
+#gen_votes()
+
+def gen_ovotes_list():
+    i=0
+    voters=""
+    accounts=[]
+    for i1 in range(0,2):
+        for i2 in range(0,10):
+            for i3 in range(0,10):
+                for i4 in range(0,10):
+                    acc=list[i1]+list[i2]+list[i3]+list[i4] +"v.bbp"
+                    save_string_to_file(acc + "\n", "./18-obbp-voter.txt")      
+gen_ovotes_list()
+

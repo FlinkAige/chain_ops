@@ -8,7 +8,7 @@ amaxpool=amaxapplybbp
 amaxquant='1000.00000000'
 votequant='1000.0000'
 i=0
-filename="11-ibbp-all-1000.txt"
+filename="18-obbp-voter.txt"
 function create_account(){
     cat $filename | while IFS= read -r line; do
         # 在这里对每一行的内容做操作
