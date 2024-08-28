@@ -78,6 +78,7 @@ tnew bbpvote112
 tnew bbpvote212
 tnew bbpvote312
 
+con_bbp=bbptest12
 voter=bbpvote313
 tpush amax updateauth '{"account":"'$voter'","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"'$con_bbp'","permission":"active"}}]}}' -p $voter
 
