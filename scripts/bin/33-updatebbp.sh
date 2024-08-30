@@ -2,7 +2,7 @@
 bbp_array=()
 while read line; do
     bbp_array+=("$line")
-done < ./33-bbpupdate_list.txt
+done < ./33-bbpupdate_list-240830-2.txt
 
 mcli='amcli -u https://expnode.amaxscan.io'
 # mcli="amcli -u http://sh-amnod.vmi.amax.dev:18188" 
