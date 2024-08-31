@@ -197,6 +197,12 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
       _refund(owner,symbol, refund_quant );
    }
 
+   ACTION refund(const name& owner){
+      _check_admin();
+      _refund_owner(owner );
+   }
+
+
 
    
    private:
@@ -284,5 +290,7 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
 
 
       void _refund(const name& owner, const extended_symbol& symbol, const asset& refund_quant);
+
+      void _refund_owner(const name& owner);
 };
 } //namespace amax

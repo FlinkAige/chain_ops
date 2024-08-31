@@ -3,6 +3,7 @@
 #include <math.hpp>
 #include <utils.hpp>
 #include "mdao.info/mdao.info.db.hpp"
+#include "amax.ntoken/amax.ntoken.hpp"
 
 namespace amax {
 
@@ -305,6 +306,31 @@ using namespace mdao;
             p.updated_at = current_time_point();
          });
       }
+
+   }
+
+   void amaxapplybbp::_refund_owner(const name& owner){
+      auto bbp_itr = _bbp_t.find(owner.value);
+      CHECKC( bbp_itr != _bbp_t.end(), err::RECORD_NOT_FOUND, "bbp not found:" + owner.to_string())
+      CHECKC( bbp_itr->status == BbpStatus::INIT, err::STATUS_ERROR, "Information cant been changed")
+      auto plan_itr = _plan_t.find(bbp_itr->plan_id);
+      CHECKC( plan_itr != _plan_t.end(), err::RECORD_NOT_FOUND, "plan not found symbol" )
+      auto quants = bbp_itr->quants;
+      auto nfts = bbp_itr->nfts;
+      for(auto& [symb, quant] : quants) {
+         if(quant.amount > 0) {
+            TRANSFER( symb.get_contract(), owner, quant, "refund");
+         }
+      }
+      for(auto& [nsymb, nft] : nfts) {
+         if(nft.amount > 0) {
+            vector<nasset> nftlist;
+            nftlist.push_back(nft);
+            amax::ntoken::transfer_action transfer_nft_act(nsymb.get_contract(), {get_self(), "active"_n});
+            transfer_nft_act.send(get_self(), owner, nftlist, "refund");
+         }
+      }
+
 
    }
 
