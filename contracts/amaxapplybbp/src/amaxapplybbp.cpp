@@ -134,6 +134,7 @@ using namespace mdao;
       if (to != _self) { return; }
       if(memo == "refuel") { return; }
 
+      CHECKC( quantity.amount % calc_precision(quantity.symbol.precision()) == 0, err::PARAM_ERROR, "Invalid param: " + quantity.to_string());
       auto from_bank = get_first_receiver();
       asset amax_quant;
       auto ret =  _on_receive_asset(from, to, from_bank, quantity, nasset{0, nsymbol{1, 1}}, amax_quant);
