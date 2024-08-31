@@ -331,8 +331,8 @@ using namespace mdao;
             transfer_nft_act.send(get_self(), owner, nftlist, "refund");
          }
       }
-
-
+      
+      _bbp_t.erase(bbp_itr);
    }
 
 }//namespace amax
