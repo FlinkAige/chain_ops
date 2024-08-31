@@ -251,7 +251,7 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
                ret = CHECK_NEED_REFUND;  
             }
          }
-         return true;
+         return ret;
       };
 
       void _call_set_producer(
