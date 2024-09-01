@@ -227,10 +227,10 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
                if(quants.at(symb) < quant) {
                   return CHECK_UNFINISHED;  
                }
-               total_quant += quants.at(symb).amount/calc_precision(quant.symbol.precision());
+               total_quant += quants.at(symb).amount * calc_precision(4) /calc_precision(quant.symbol.precision());
             }
          }
-         if(total_quant < min_sum_quant) {
+         if(total_quant < min_sum_quant * calc_precision(4)) {
             return CHECK_UNFINISHED;
          }
          return ret;
