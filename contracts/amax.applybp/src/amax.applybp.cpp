@@ -106,7 +106,6 @@ using namespace mdao;
       _set_producer(owner,logo_uri,org_name,org_info,dao_code,reward_shared_plan,manifesto,issuance_plan);
    }
 
-
    void amax_applybp::setstatus( const name& submiter, const name& owner, const name& status){
 
       require_auth( submiter );

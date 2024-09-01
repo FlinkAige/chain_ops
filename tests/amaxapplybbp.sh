@@ -34,7 +34,7 @@ plan_id=2
 bbp_quota=30
 tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'", 2, [[["8,AMAX","amax.token"],"2.00000000 AMAX"]],[[[[1001,0],"amax.ntoken"],[1,[1000002,0]]]]]' -p $con_bbp
 
-
+tpush $con_bbp updatestatus '["apppp22","apppp22"]' -p $con_bbp
 
 tnew bbpvote112
 tnew bbpvote212
@@ -86,3 +86,6 @@ tpush amax updateauth '{"account":"'$voter'","permission":"active","parent":"own
 bbpvote113
 bbpvote213
 bbpvote313
+
+bbp_owner1=bbp.owner123
+tpush $con_bbp refund '["'$bbp_owner1'"]' -p $con_bbp
