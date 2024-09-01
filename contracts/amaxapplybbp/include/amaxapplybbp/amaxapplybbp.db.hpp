@@ -41,7 +41,7 @@ static constexpr uint32_t CHECK_FINISHED            = 2;
 namespace BbpStatus {
     static constexpr eosio::name INIT           { "init"_n   };
     static constexpr eosio::name REFUNDING      { "refunding"_n   };
-    static constexpr eosio::name FINISHED       { "fulfilled"_n  };
+    static constexpr eosio::name FINISHED       { "finished"_n  };
 }
 
 NTBL("global") global_t {
