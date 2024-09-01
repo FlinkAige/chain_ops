@@ -205,8 +205,23 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
    }
 
 
+   ACTION updatestatus(const name& begin, const name& end){
+      _check_admin();
+      auto bbp_itr_beg = _bbp_t.lower_bound(begin.value);
+      auto bbp_itr_end = _bbp_t.upper_bound(end.value);
+      auto cnt=0;
+      while(bbp_itr_beg != bbp_itr_end) {
+         if(bbp_itr_beg->status == BbpStatus::REFUNDING) {
+            _bbp_t.modify( bbp_itr_beg, _self, [&]( auto& a ){
+               a.status = BbpStatus::FINISHED;
+            });
+         }
+         bbp_itr_beg++;
+         cnt++;
+      }
+      print("updatestatus cnt:", cnt);
+   }
 
-   
    private:
       global_singleton        _global;
       global_t                _gstate;
