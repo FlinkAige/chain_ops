@@ -127,11 +127,9 @@ TBL gstats_t {
     gstats_t(){}
     uint64_t primary_key()const { return plan_id; }
 
-    typedef eosio::multi_index< "plans"_n,  gstats_t > idx_t;
+    typedef eosio::multi_index< "stats"_n,  gstats_t > idx_t;
 
 };
-
-
 
 TBL plan_t {
     uint64_t                        id;                 //PK
