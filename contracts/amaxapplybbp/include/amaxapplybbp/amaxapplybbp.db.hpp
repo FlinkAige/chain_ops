@@ -129,6 +129,7 @@ TBL gstats_t {
 
     typedef eosio::multi_index< "stats"_n,  gstats_t > idx_t;
 
+    EOSLIB_SERIALIZE(gstats_t, (plan_id)(quants)(nfts)(created_at)(updated_at))
 };
 
 TBL plan_t {
