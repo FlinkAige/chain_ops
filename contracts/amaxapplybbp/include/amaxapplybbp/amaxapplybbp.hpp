@@ -82,7 +82,9 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
         _gstate = _global.exists() ? _global.get() : global_t{};
     }
 
-    ~amaxapplybbp() { _global.set( _gstate, get_self() ); }
+    ~amaxapplybbp() { 
+      _global.set( _gstate, get_self() );
+     }
    
    ACTION version() {
       map<extended_nsymbol, nasset> nfts;
@@ -208,6 +210,7 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
    private:
       global_singleton        _global;
       global_t                _gstate;
+
       bbp_t::idx_t            _bbp_t;
       voter_t::idx_t          _voter_t;
       plan_t::idx_t           _plan_t;
@@ -286,6 +289,54 @@ class [[eosio::contract("amaxapplybbp")]] amaxapplybbp : public contract {
          char* buffer = (char*)malloc( tx_size );
          read_transaction( buffer, tx_size );
          txid = sha256( buffer, tx_size );
+      }
+
+      void _add_quant_stats( const uint64_t& plan_id, const extended_symbol ext_sym, const asset& quant){
+         gstats_t::idx_t stats( _self, _self.value );
+         auto stat_itr = stats.find( plan_id );
+         if(stat_itr != stats.end()) {
+            auto plan_quants  = stat_itr->quants;
+            if(plan_quants.count(ext_sym) == 0) {
+               plan_quants[ext_sym] = quant;
+            } else{
+               plan_quants[ext_sym] += quant;
+            }
+           stats.modify( stat_itr, _self, [&]( auto& a ){
+               a.quants = plan_quants;
+               a.updated_at = current_time_point();
+           });
+         } else {
+            stats.emplace( _self, [&]( auto& a ){
+               a.plan_id = plan_id;
+               a.quants[ext_sym] = quant;
+               a.created_at = current_time_point();
+               a.updated_at = current_time_point();
+            });
+         }
+      }
+
+      void _add_nquant_stats( const uint64_t& plan_id, const extended_nsymbol ext_sym, const nasset& quant){
+         gstats_t::idx_t stats( _self, _self.value );
+         auto stat_itr = stats.find( plan_id );
+         if(stat_itr != stats.end()) {
+            auto nfts  = stat_itr->nfts;
+            if(nfts.count(ext_sym) == 0) {
+               nfts[ext_sym] = quant;
+            } else{
+               nfts[ext_sym] += quant;
+            }
+           stats.modify( stat_itr, _self, [&]( auto& a ){
+               a.nfts = nfts;
+               a.updated_at = current_time_point();
+           });
+         } else {
+            stats.emplace( _self, [&]( auto& a ){
+               a.plan_id = plan_id;
+               a.nfts[ext_sym] = quant;
+               a.created_at = current_time_point();
+               a.updated_at = current_time_point();
+            });
+         }
       }
 
 

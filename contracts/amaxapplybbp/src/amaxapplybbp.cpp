@@ -187,6 +187,8 @@ using namespace mdao;
          } else {
             quants[symb] += quantity;
          }
+         //update global stats
+         _add_quant_stats(plan_itr->id, symb, quantity);
       } else if(nquantity.amount > 0) {
          plan_nfts = plan_itr->nfts;
 
@@ -200,6 +202,8 @@ using namespace mdao;
          } else {
             nfts[nsymb] += nquantity;
          }
+         _add_nquant_stats(plan_itr->id, nsymb, nquantity);
+      
       } else {
          CHECKC(false, err::PARAM_ERROR, "Invalid param: " + quantity.to_string())
       }
