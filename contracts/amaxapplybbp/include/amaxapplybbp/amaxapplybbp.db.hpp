@@ -57,6 +57,14 @@ NTBL("global") global_t {
 
 typedef eosio::singleton< "global"_n, global_t > global_singleton;
 
+NTBL("globalclaim") globalclm_t {              
+    asset    total_claimed = asset(0, AMAX_SYMBOL); 
+    name     last_idx; 
+    uint32_t bbp_count     = 0;
+
+    EOSLIB_SERIALIZE( globalclm_t, (total_claimed)(last_idx)(bbp_count) )
+};
+typedef eosio::singleton< "globalclaim"_n, globalclm_t > globalclaim_singleton;
 
 //scope _self
 TBL voter_t {
@@ -116,6 +124,24 @@ TBL bbp_t {
                             (manifesto)(email)(url)(location)(status)
                             (created_at)(updated_at)(quants)(nfts)(mkey))
 };
+
+
+
+TBL bbpc_t {
+    name            account;
+    name            rewarder;
+    time_point_sec  created_at;
+    time_point_sec  updated_at;
+
+    bbpc_t() {};
+
+    uint64_t    primary_key()const { return account.value; }
+
+    typedef eosio::multi_index<"bbps"_n,bbpc_t> idx_t;
+
+    EOSLIB_SERIALIZE( bbpc_t, (account)(rewarder)(created_at)(updated_at) )
+};
+
 
 TBL gstats_t {
     uint64_t  plan_id;

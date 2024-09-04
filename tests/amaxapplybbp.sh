@@ -89,3 +89,7 @@ bbpvote313
 
 bbp_owner1=bbp.owner123
 tpush $con_bbp refund '["'$bbp_owner1'"]' -p $con_bbp
+
+tpush $con_bbp addbbp '[["b1.com"],"joss"]' -p $con_bbp
+
+tpush $con_bbp claimbbps '[100]' -p $con_bbp
