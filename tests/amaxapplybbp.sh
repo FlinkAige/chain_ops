@@ -93,3 +93,6 @@ tpush $con_bbp refund '["'$bbp_owner1'"]' -p $con_bbp
 tpush $con_bbp addbbp '[["b1.com"],"joss"]' -p $con_bbp
 
 tpush $con_bbp claimbbps '[100]' -p $con_bbp
+
+
+tpush $con_bbp initstats '[1,[[["8,AMAX","amax.token"],"2.00000000 AMAX"],[["8,AMAE","amae.token"],"2.00000000 AMAE"]] ]' -p $con_bbp
