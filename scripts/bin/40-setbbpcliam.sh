@@ -1,8 +1,9 @@
 #!/bin/bash
-mcli="amcli -u http://sh-amnod.vmi.amax.dev:18188" 
-# mcli='amcli -u https://expnode.amaxscan.io'
-# con_bbp=amaxapplybbp
-con_bbp=bbptest12
+# mcli="amcli -u http://sh-amnod.vmi.amax.dev:18188" 
+# con_bbp=bbptest12
+
+mcli='amcli -u https://expnode.amaxscan.io'
+con_bbp=amaxapplybbp
 filename="40-ibbp-split.txt"
 function addbbps(){
     cat $filename | while IFS= read -r line; do
