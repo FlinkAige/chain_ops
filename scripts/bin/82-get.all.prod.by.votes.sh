@@ -29,3 +29,6 @@ do
   next_key=$(echo $prods_info | jq -r '.next_key' )
 done
 echo -n "]" >> ${file}
+
+
+amcli -u  https://expnode.amaxscan.io get schedule
