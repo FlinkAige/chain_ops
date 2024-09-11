@@ -1,26 +1,21 @@
 #!/bin/bash
-# mcli="amcli -u http://sh-amnod.vmi.amax.dev:18188" 
-# con_bbp=bbptest12
-. ~/.bbpclaim.conf
+
+. /opt/amax/conf/bbpclaim.conf
+amcli wallet unlock -n $wallet --password $password 2>&1 | echo "unlocked"
 
 mcli='amcli -u https://expnode.amaxscan.io'
 con_bbp=amaxapplybbp
-amcli wallet unlock -n $wallet_name --password $password
 
+set -e
 function bbpclaimreward(){
+    i=1
     while true; do
         sleep 1
-        ret=`$mcli push action $con_bbp claimbbps '[50]' -p $submiter 2>&1`
-        check_results=`echo $ret | grep '[[1]]'`
-        if [[ $check_results =~ "[[1]]" ]] 
-        then 
-            echo "error:...."
-            break
-        else     
-            echo "success:..."
-        fi
-        
+
+        echo "claim: $i" && $mcli push action $con_bbp claimbbps '[50]' -p $submiter 2>&1 | \
+             echo "done claiming" && exit 1
+
+  i=$((i + 1))
     done
 
 }
-bbpclaimreward
