@@ -1,6 +1,11 @@
 con_bbp=bbptest12
 tnew $con_bbp
-tset $con_bbp amaxapplybbp
+mpush $con_bbp setplanex '["'$plan_id'","'$bbp_quota'",1200, "'$begin'","'$end'","'$applyc'","'$fulfillc'", [[["8,AMAX", "amax.token"],"900.00000000 AMAX"], [["8,AMAE", "amae.token"], "0.00000000 AMAE"]], []]' -p $con_bbpplan_id=4
+bbp_quota=250
+applyc=17
+fulfillc=17
+begin=2024-09-28T00:00:00
+end=2024-10-28T00:00:00mpush $con_bbp setplanex '["'$plan_id'","'$bbp_quota'",1200,  "'$begin'","'$end'","'$applyc'","'$fulfillc'", [[["8,AMAX", "amax.token"],"1200.00000000 AMAX"]], []]' -p $con_bbp
 
 tcli set account permission $con_bbp active --add-code
 
@@ -25,14 +30,33 @@ bbp_owner2=bbp.owner22
 tnew $bbp_owner2
 
 plan_id=1
-bbp_quota=270
+bbp_quota=5
 tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'",2, [[["8,AMAX", "amax.token"],"1.00000000 AMAX"], [["6,MUSDT", "amax.mtoken"], "0.000000 MUSDT"]], []]' -p $con_bbp
 tcli get table $con_bbp $con_bbp "plans"
 
-tcli get table amax.ntoken ad "accounts"
 plan_id=2
-bbp_quota=30
-tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'", 2, [[["8,AMAX","amax.token"],"2.00000000 AMAX"]],[[[[1001,0],"amax.ntoken"],[1,[1000002,0]]]]]' -p $con_bbp
+bbp_quota=50
+tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'",1200, [[["8,AMAX", "amax.token"],"600.00000000 AMAX"], [["8,AMAE", "amae.token"], "0.00000000 AMAE"]], []]' -p $con_bbp
+
+
+plan_id=3
+bbp_quota=100
+tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'",1200, [[["8,AMAX", "amax.token"],"900.00000000 AMAX"], [["8,AMAE", "amae.token"], "0.00000000 AMAE"]], []]' -p $con_bbp
+
+
+plan_id=4
+bbp_quota=150
+tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'",1200, [[["8,AMAX", "amax.token"],"1200.00000000 AMAX"]], []]' -p $con_bbp
+
+
+
+
+tcli get table $con_bbp $con_bbp "plans"
+
+plan_id=2
+bbp_quota=50
+tpush $con_bbp setplan '["'$plan_id'","'$bbp_quota'",2, [[["8,AMAX", "amax.token"],"1.00000000 AMAX"], [["6,MUSDT", "amax.mtoken"], "0.000000 MUSDT"]], []]' -p $con_bbp
+tcli get table $con_bbp $con_bbp "plans"
 
 tpush $con_bbp updatestatus '["apppp22","apppp22"]' -p $con_bbp
 
@@ -79,7 +103,7 @@ tnew bbpvote212
 tnew bbpvote312
 
 con_bbp=bbptest12
-voter=bbpvote313
+voter=voteraaa
 tpush amax updateauth '{"account":"'$voter'","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"'$con_bbp'","permission":"active"}}]}}' -p $voter
 
 
