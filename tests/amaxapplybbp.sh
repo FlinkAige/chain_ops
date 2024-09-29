@@ -1,5 +1,5 @@
 con_bbp=bbptest12
-tnew $con_bbp
+tset $con_bbp amaxapplybbp
 mpush $con_bbp setplanex '["'$plan_id'","'$bbp_quota'",1200, "'$begin'","'$end'","'$applyc'","'$fulfillc'", [[["8,AMAX", "amax.token"],"900.00000000 AMAX"], [["8,AMAE", "amae.token"], "0.00000000 AMAE"]], []]' -p $con_bbpplan_id=4
 bbp_quota=250
 applyc=17
@@ -114,9 +114,15 @@ bbpvote313
 bbp_owner1=bbp.owner123
 tpush $con_bbp refund '["'$bbp_owner1'"]' -p $con_bbp
 
-tpush $con_bbp addbbp '[["b1.com"],"joss"]' -p $con_bbp
+tpush $con_bbp setbbp '[["b1.com"],"joss"]' -p $con_bbp
 
 tpush $con_bbp claimbbps '[100]' -p $con_bbp
 
 
 tpush $con_bbp initstats '[1,[[["8,AMAX","amax.token"],"2.00000000 AMAX"],[["8,AMAE","amae.token"],"2.00000000 AMAE"]] ]' -p $con_bbp
+
+
+new_bbp=bbptest
+older_bbp=b1.com
+voterid=bbpvote113
+tpush $con_bbp changebbp '["'$new_bbp'","'$older_bbp'","'$voterid'"]' -p $con_bbp
