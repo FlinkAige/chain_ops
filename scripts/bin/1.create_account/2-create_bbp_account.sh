@@ -23,7 +23,7 @@ create_account
 function transfer_amax(){
     i=$((i+1))
     cat $filename | while IFS= read -r line; do
-        if [ $i -lt 35 ];then
+        if [ $i -lt 17 ];then
             acct=$line
             result=`$mcli get currency balance amax.token $acct`
             amax_quant=`echo $res | grep AMAX`
