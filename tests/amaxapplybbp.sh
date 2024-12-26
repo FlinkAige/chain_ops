@@ -124,5 +124,20 @@ tpush $con_bbp initstats '[1,[[["8,AMAX","amax.token"],"2.00000000 AMAX"],[["8,A
 
 new_bbp=bbptest
 older_bbp=b1.com
-voterid=bbpvote113
+voterid=7
 tpush $con_bbp changebbp '["'$new_bbp'","'$older_bbp'","'$voterid'"]' -p $con_bbp
+
+
+con_bps=amaxapplybps
+con_bbp=amaxapplybbp
+mpkey=AM898h1RX9ycXSiEwu4CF4Ame5HXxtsjqsYqAm6kTwvi7ZBaHuQs
+bbp=aplo12345bbp
+url=https://apollo.mypinata.cloud/ipfs/QmVtDVTuP21tZ9jmfUfbU44BMs7bCkczcyNWaL3mf8CQbb
+tpush $con_bps addproducer '["'$con_bbp'","'$bbp'","'$mpkey'","'$url'",0,0]' -p $con_bbp
+
+
+voter=ajgjv.bbp
+bbp=aplo12345bbp
+votequant=1200.0000
+mpush amax addvote '["'$voter'", "'$votequant' VOTE"]' -p $voter
+mpush amax vote '["'$voter'", ["'$bbp'"]]' -p $voter
