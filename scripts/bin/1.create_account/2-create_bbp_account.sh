@@ -18,10 +18,9 @@ function create_account(){
         $mcli system newaccount --stake-net "0.005000 AMAX" --stake-cpu "0.005000 AMAX" --buy-ram-kbytes 4 $creator $acct $owner $activer -p bbp
     done
 }
-create_account
 
 function transfer_amax(){
-    i=$((i+1))
+    i=0
     cat $filename | while IFS= read -r line; do
         if [ $i -lt 17 ];then
             acct=$line
@@ -31,13 +30,14 @@ function transfer_amax(){
                 echo "-----------transfer amax to account: $acct ------------"
                 $mcli push action amax.token transfer '["'$amaxpool'", "'$acct'", "'$amaxquant' AMAX", ""]' -p $amaxpool
             fi
+            i=$((i+1))
         else
             break
         fi
     done
 }
 # create_account
-# transfer_amax
+transfer_amax
 
 
 
