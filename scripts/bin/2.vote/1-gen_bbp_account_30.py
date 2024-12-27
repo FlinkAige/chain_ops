@@ -41,6 +41,7 @@ def gen_ovotes_group():
                             voters+=","
     if(i%30!=0):
         index = int(i/30)
+        add_ram_command(accounts[index])
         add_vote_command(accounts[index])
         gen_vote_command(accounts[index], voters)
                             
