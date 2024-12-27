@@ -1,4 +1,4 @@
-mpush='amcli -u https://expnode.amaxscan.io push action'
+mpush="amcli -u https://expnode.amaxscan.io push action"
 $mpush amax addvote '["baaa.bbp", "1000.0000 VOTE"]' -pbaaa.bbp
 $mpush amax addvote '["baab.bbp", "1000.0000 VOTE"]' -pbaab.bbp
 $mpush amax addvote '["baac.bbp", "1000.0000 VOTE"]' -pbaac.bbp
