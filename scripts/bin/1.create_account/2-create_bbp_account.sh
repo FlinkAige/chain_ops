@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # ---------------- 参数配置 ----------------
-mcli="amcli -u https://chain.amaxtest.com"
+# mcli="amcli -u https://chain.amaxtest.com"
+mcli="amcli -u https://aplink.armonia.fund 
 creator=bbp
 owner=amax.dao@active
 activer=amaxapplybbp@active
