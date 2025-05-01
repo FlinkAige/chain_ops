@@ -1,10 +1,11 @@
-#mpush="amcli -u https://aplink.armonia.fund push action"
-mcli="amcli -u https://chain.amaxtest.com"
+mpush="amcli -u https://aplink.armonia.fund push action"
+# mcli="amcli -u https://chain.amaxtest.com"
+
+votequant=5000000.0000
+$mpush amax addvote '["apl51yxqgotk", "'$votequant' VOTE"]' -p apl51yxqgotk
+$mpush amax addvote '["apl51bvjplwm", "'$votequant' VOTE"]' -p apl51bvjplwm
+$mpush amax addvote '["apl51rnazcfy", "'$votequant' VOTE"]' -p apl51rnazcfy
+$mpush amax addvote '["apl51khlbwue", "'$votequant' VOTE"]' -p apl51khlbwue
 
 
-votequant=500.00000000
-$mpush amax addvote '["taaaa.bbp", "'$votequant' VOTE"]' -p taaaa.bbp
-$mpush amax addvote '["taaab.bbp", "'$votequant' VOTE"]' -p taaab.bbp
-$mpush amax addvote '["taaac.bbp", "'$votequant' VOTE"]' -p taaac.bbp
-$mpush amax addvote '["taaad.bbp", "'$votequant' VOTE"]' -p taaad.bbp
 
