@@ -56,7 +56,7 @@ create_account(){
         else
             log "❌ 创建失败: $acct"
             echo "$acct" >> "$failed_accounts"
-            echo "[$(date +'%Y-%m-%d %H:%M:%S')] $create_cmd" >> "$failed_commands"
+            echo "$create_cmd" >> "$failed_commands"
             failed_count=$((failed_count+1))
         fi
     done
@@ -98,7 +98,7 @@ transfer_amax(){
             else
                 log "❌ 转账失败: $acct"
                 echo "$acct" >> "$failed_accounts"
-                echo "[$(date +'%Y-%m-%d %H:%M:%S')] $transfer_cmd" >> "$failed_commands"
+                echo "$transfer_cmd" >> "$failed_commands"
                 failed_count=$((failed_count+1))
             fi
         else
@@ -143,7 +143,7 @@ case "$1" in
         echo "📘 用法：$0 [create|transfer|all|help]"
         echo "  create         - 创建账户"
         echo "  transfer [n amount] - 向前 n 个账户转账指定金额"
-        echo "    示例: $0 transfer 10 500.00000000 AMAX"
+        echo "    示例: $0 transfer 10 \"500.00000000 AMAX\""
         echo "  all            - 创建 + 转账"
         echo "  help           - 显示帮助"
         ;;
