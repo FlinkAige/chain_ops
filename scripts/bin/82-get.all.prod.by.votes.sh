@@ -1,7 +1,7 @@
 #!/bin/bash
 
-amnod_url=https://amgenesisdao.amaxscan.io
-amnod_url=https://aplinkdev.amaxscan.io
+# amnod_url=https://amgenesisdao.amaxscan.io
+amnod_url=https://aplink.armonia.fund
 mcli="amcli -u ${amnod_url}"
 
 has_more=true

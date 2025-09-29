@@ -10,11 +10,11 @@ def gen_ovotes_list():
     i=0
     voters=""
     accounts=[]
-    for i1 in range(0,3):
+    for i1 in range(2,4):
         for i2 in range(0,10):
             for i3 in range(0,10):
                 for i4 in range(0,10):
-                    acc=list[i1]+list[i2]+list[i3]+list[i4] +".bbp"
+                    acc=list[i1]+list[i2]+list[i3]+list[i4] +"v.bbp"
                     save_string_to_file(acc + "\n", "./bbps.txt")      
 gen_ovotes_list()
 

@@ -3,7 +3,7 @@
 # ---------------- 参数配置 ----------------
 #mcli="amcli -u https://chain.amaxtest.com"
 mcli="amcli -u https://aplink.armonia.fund"
-creator=amax2o25o5o1
+creator=bbp
 owner=$creator@active
 activer=$creator@active
 amaxpool=$creator
