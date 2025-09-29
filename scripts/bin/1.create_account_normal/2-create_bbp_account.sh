@@ -4,8 +4,8 @@
 #mcli="amcli -u https://chain.amaxtest.com"
 mcli="amcli -u https://aplink.armonia.fund"
 creator=bbp
-owner=$creator@active
-activer=$creator@active
+owner=amax.dao@active
+activer=amaxapplybbp@active
 amaxpool=$creator
 filename="bbps.txt"
 logfile="run_$(date +%Y%m%d_%H%M%S).log"
