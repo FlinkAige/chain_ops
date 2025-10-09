@@ -11,7 +11,7 @@ set -euo pipefail
 
 # ---------- 可配置参数 ----------
 INPUT_FILE="${1:-all.votes.json}"       # 默认读取 data.json
-MIN_ID="${MIN_ID:-1800}"           # 可通过环境变量或命令行改
+MIN_ID="${MIN_ID:-0}"           # 可通过环境变量或命令行改
 MAX_ID="${MAX_ID:-2800}"
 OUT_DIR="./"                       # 输出目录（默认当前）
 # --------------------------------
