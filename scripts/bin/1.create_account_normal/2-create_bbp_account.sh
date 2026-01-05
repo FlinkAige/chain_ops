@@ -45,6 +45,32 @@ load_accounts() {
   total_accounts=${#accounts[@]}
 }
 
+shuffle_accounts_by_block() {
+  local block_size="$1"
+  if [[ -z "${block_size}" || "${block_size}" -le 0 ]]; then
+    return 0
+  fi
+  if ! command -v shuf >/dev/null 2>&1; then
+    log "⚠️ 未找到 shuf，保持原有顺序。"
+    return 0
+  fi
+  local -a shuffled=()
+  local start=0
+  while (( start < total_accounts )); do
+    local -a block=()
+    local end=$((start + block_size))
+    if (( end > total_accounts )); then end=$total_accounts; fi
+    for ((i=start; i<end; i++)); do
+      block+=("${accounts[$i]}")
+    done
+    while IFS= read -r line; do
+      shuffled+=("$line")
+    done < <(printf "%s\n" "${block[@]}" | shuf)
+    start=$end
+  done
+  accounts=("${shuffled[@]}")
+}
+
 # SIGINT/SIGTERM 保存进度
 trap 'on_abort' INT TERM
 on_abort() {
@@ -90,11 +116,42 @@ read_progress()  { local f="$1"; [[ -f "$f" ]] && cat "$f" || echo 0; }
 write_progress() { echo "$2" > "$1"; }
 
 # ---------------- 创建账户（断点续跑） ----------------
+create_one_account() {
+  local acct="$1"
+  local status_file="$2"
+  local create_cmd
+
+  log "🛠️ 正在创建账户: $acct"
+  create_cmd="$mcli system newaccount --stake-net '0.005000 AMAX' --stake-cpu '0.005000 AMAX' --buy-ram-kbytes 4 $creator $acct $owner $activer -p $creator"
+
+  if eval "$create_cmd"; then
+    log "✅ 创建成功: $acct"
+    mark_created "$acct"
+    echo 0 > "$status_file"
+  else
+    log "❌ 创建失败: $acct"
+    echo "$acct" >> "$failed_accounts"
+    echo "$create_cmd" >> "$failed_commands"
+    echo 1 > "$status_file"
+  fi
+}
+
 create_account(){
   load_accounts
+  local parallel="${1:-1}"
+  local shuffle_block="${2:-100}"
+  local consecutive_failures=0
+  local status_dir=".create_status"
+  local -a batch_accounts=()
+  local -a batch_status_files=()
+  local -a batch_pids=()
+
+  mkdir -p "$status_dir"
+  shuffle_accounts_by_block "$shuffle_block"
+
   local start_index
   start_index=$(read_progress "$progress_create")
-  log "📄 将从 create 断点 index=$start_index 继续（0 基） | 总数：$total_accounts"
+  log "📄 将从 create 断点 index=$start_index 继续（0 基） | 总数：$total_accounts | 并发：$parallel | 乱序块：$shuffle_block"
 
   for ((i=start_index; i<total_accounts; i++)); do
     acct="${accounts[$i]}"
@@ -102,28 +159,73 @@ create_account(){
 
     if already_created "$acct"; then
       log "⏭️ 已在成功清单中，跳过创建：$acct"
+      consecutive_failures=0
       continue
     fi
     if account_exists "$acct"; then
       log "ℹ️ 账号已存在，记入成功清单并跳过：$acct"
       mark_created "$acct"
+      consecutive_failures=0
       continue
     fi
 
-    log "🛠️ 正在创建账户: $acct (index=$i / total=$total_accounts)"
-    create_cmd="$mcli system newaccount --stake-net '0.005000 AMAX' --stake-cpu '0.005000 AMAX' --buy-ram-kbytes 4 $creator $acct $owner $activer -p $creator"
+    local status_file="$status_dir/status_${i}.txt"
+    batch_accounts+=("$acct")
+    batch_status_files+=("$status_file")
+    create_one_account "$acct" "$status_file" &
+    batch_pids+=($!)
 
-    if eval "$create_cmd"; then
-      log "✅ 创建成功: $acct"
-      mark_created "$acct"
-      created_count=$((created_count+1))
-    else
-      log "❌ 创建失败: $acct"
-      echo "$acct" >> "$failed_accounts"
-      echo "$create_cmd" >> "$failed_commands"
-      failed_count=$((failed_count+1))
+    if (( ${#batch_accounts[@]} >= parallel )); then
+      for pid in "${batch_pids[@]}"; do
+        wait "$pid"
+      done
+      for idx in "${!batch_accounts[@]}"; do
+        local status="1"
+        if [[ -f "${batch_status_files[$idx]}" ]]; then
+          status="$(cat "${batch_status_files[$idx]}")"
+        fi
+        if [[ "$status" == "0" ]]; then
+          created_count=$((created_count+1))
+          consecutive_failures=0
+        else
+          failed_count=$((failed_count+1))
+          consecutive_failures=$((consecutive_failures+1))
+          if (( consecutive_failures >= 5 )); then
+            log "🛑 连续失败达到 5 次，停止创建。"
+            write_progress "$progress_create" "$i"
+            return 1
+          fi
+        fi
+      done
+      batch_accounts=()
+      batch_status_files=()
+      batch_pids=()
     fi
   done
+
+  if (( ${#batch_accounts[@]} > 0 )); then
+    for pid in "${batch_pids[@]}"; do
+      wait "$pid"
+    done
+    for idx in "${!batch_accounts[@]}"; do
+      local status="1"
+      if [[ -f "${batch_status_files[$idx]}" ]]; then
+        status="$(cat "${batch_status_files[$idx]}")"
+      fi
+      if [[ "$status" == "0" ]]; then
+        created_count=$((created_count+1))
+        consecutive_failures=0
+      else
+        failed_count=$((failed_count+1))
+        consecutive_failures=$((consecutive_failures+1))
+        if (( consecutive_failures >= 5 )); then
+          log "🛑 连续失败达到 5 次，停止创建。"
+          write_progress "$progress_create" "$total_accounts"
+          return 1
+        fi
+      fi
+    done
+  fi
 
   # 完成后将游标指向末尾
   write_progress "$progress_create" "$total_accounts"
@@ -212,8 +314,10 @@ summary(){
 # ---------------- 主入口 ----------------
 case "${1:-help}" in
   create)
-    confirm "⚠️ 将按断点续跑创建账户，是否继续？"
-    create_account
+    confirm "⚠️ 将按断点续跑创建账户（支持并发与乱序），是否继续？"
+    parallel="${2:-1}"
+    shuffle_block="${3:-100}"
+    create_account "$parallel" "$shuffle_block"
     summary
     ;;
   transfer)
@@ -224,13 +328,17 @@ case "${1:-help}" in
     ;;
   all)
     confirm "⚠️ 将执行『创建账户 + 转账』（均支持断点续跑），是否继续？"
-    create_account
+    parallel="${2:-1}"
+    shuffle_block="${3:-100}"
+    create_account "$parallel" "$shuffle_block"
     transfer_amax
     summary
     ;;
   resume)
     # 简便入口：自动从断点继续（先create后transfer）
-    create_account
+    parallel="${2:-1}"
+    shuffle_block="${3:-100}"
+    create_account "$parallel" "$shuffle_block"
     transfer_amax
     summary
     ;;
@@ -246,7 +354,7 @@ case "${1:-help}" in
     ;;
   help|*)
     echo "📘 用法：$0 [create|transfer|all|resume|reset|cleanall|help]"
-    echo "  create                   - 断点续跑创建账户（自动跳过已存在/已记录成功）"
+    echo "  create [parallel block]  - 断点续跑创建账户（并发/乱序块，默认 1/100）"
     echo "  transfer [n amount]      - 断点续跑向前 n 个账户转账指定金额（跳过已达余额/已转）"
     echo "    示例: $0 transfer 10 \"500.00000000 AMAX\""
     echo "  all                      - 创建 + 转账（均支持断点续跑）"
