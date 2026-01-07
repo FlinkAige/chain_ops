@@ -13,7 +13,7 @@ def gen_ovotes_group():
     i=0
     voters=""
     accounts=[]
-    for i1 in range(2,4):
+    for i1 in range(4,9):
         for i2 in range(0,10):
             for i3 in range(0,10):
                 for i4 in range(0,10):
